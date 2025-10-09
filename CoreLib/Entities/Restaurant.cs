@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace CoreLib.Entities
 {
     public class Restaurant

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace CoreLib.Entities
 {
     public enum OrderStatus { Created, Confirmed, Preparing, OnTheWay, Delivered, Cancelled }

@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using CoreLib.Entities;
 
 namespace CoreLib.Dtos

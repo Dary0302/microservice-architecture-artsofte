@@ -7,33 +7,33 @@ namespace OrderService.Dal.Repositories
 {
     public class RestaurantRepository : IRestaurantRepository
     {
-        private readonly AppDbContext _db;
-        public RestaurantRepository(AppDbContext db) => _db = db;
+        private readonly AppDbContext db;
+        public RestaurantRepository(AppDbContext db) => this.db = db;
         public async Task<Restaurant> AddAsync(Restaurant entity)
         {
-            _db.Restaurants.Add(entity);
-            await _db.SaveChangesAsync();
+            db.Restaurants.Add(entity);
+            await db.SaveChangesAsync();
             return entity;
         }
 
         public async Task DeleteAsync(int id)
         {
-            var e = await _db.Restaurants.FindAsync(id);
+            var e = await db.Restaurants.FindAsync(id);
             if (e == null) return;
-            _db.Restaurants.Remove(e);
-            await _db.SaveChangesAsync();
+            db.Restaurants.Remove(e);
+            await db.SaveChangesAsync();
         }
 
-        public async Task<List<Restaurant>> GetAllAsync() => await _db.Restaurants.ToListAsync();
+        public async Task<List<Restaurant>> GetAllAsync() => await db.Restaurants.ToListAsync();
 
-        public async Task<Restaurant?> GetAsync(int id) => await _db.Restaurants.FindAsync(id);
+        public async Task<Restaurant?> GetAsync(int id) => await db.Restaurants.FindAsync(id);
 
-        public async Task<List<Restaurant>> GetWithDishesAsync() => await _db.Restaurants.Include(r => r.Dishes).ToListAsync();
+        public async Task<List<Restaurant>> GetWithDishesAsync() => await db.Restaurants.Include(r => r.Dishes).ToListAsync();
 
         public async Task UpdateAsync(Restaurant entity)
         {
-            _db.Restaurants.Update(entity);
-            await _db.SaveChangesAsync();
+            db.Restaurants.Update(entity);
+            await db.SaveChangesAsync();
         }
     }
 }

@@ -7,33 +7,33 @@ namespace OrderService.Dal.Repositories
 {
     public class DishRepository : IDishRepository
     {
-        private readonly AppDbContext _db;
-        public DishRepository(AppDbContext db) => _db = db;
+        private readonly AppDbContext db;
+        public DishRepository(AppDbContext db) => this.db = db;
         public async Task<Dish> AddAsync(Dish entity)
         {
-            _db.Dishes.Add(entity);
-            await _db.SaveChangesAsync();
+            db.Dishes.Add(entity);
+            await db.SaveChangesAsync();
             return entity;
         }
 
         public async Task DeleteAsync(int id)
         {
-            var e = await _db.Dishes.FindAsync(id);
+            var e = await db.Dishes.FindAsync(id);
             if (e == null) return;
-            _db.Dishes.Remove(e);
-            await _db.SaveChangesAsync();
+            db.Dishes.Remove(e);
+            await db.SaveChangesAsync();
         }
 
-        public async Task<List<Dish>> GetAllAsync() => await _db.Dishes.ToListAsync();
+        public async Task<List<Dish>> GetAllAsync() => await db.Dishes.ToListAsync();
 
-        public async Task<Dish?> GetAsync(int id) => await _db.Dishes.FindAsync(id);
+        public async Task<Dish?> GetAsync(int id) => await db.Dishes.FindAsync(id);
 
-        public async Task<List<Dish>> GetByRestaurantAsync(int restaurantId) => await _db.Dishes.Where(d => d.RestaurantId == restaurantId).ToListAsync();
+        public async Task<List<Dish>> GetByRestaurantAsync(int restaurantId) => await db.Dishes.Where(d => d.RestaurantId == restaurantId).ToListAsync();
 
         public async Task UpdateAsync(Dish entity)
         {
-            _db.Dishes.Update(entity);
-            await _db.SaveChangesAsync();
+            db.Dishes.Update(entity);
+            await db.SaveChangesAsync();
         }
     }
 }

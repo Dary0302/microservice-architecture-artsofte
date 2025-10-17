@@ -3,19 +3,19 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoreLib\CoreLib.csproj" />
-    <ProjectReference Include="..\OrderService.Logic\OrderService.Logic.csproj" />
-    <ProjectReference Include="..\OrderService.Dal\OrderService.Dal.csproj" />
+    <ProjectReference Include="..\DeliveryService.Application\DeliveryService.Application.csproj" />
+    <ProjectReference Include="..\DeliveryService.Infrastructure\DeliveryService.Infrastructure.csproj" />
+    <ProjectReference Include="..\DeliveryService.Core\DeliveryService.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 </Project>

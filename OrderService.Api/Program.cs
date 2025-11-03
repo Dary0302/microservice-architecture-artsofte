@@ -1,3 +1,4 @@
+using CoreLib.Http;
 using Microsoft.EntityFrameworkCore;
 using CoreLib.Interfaces;
 using OrderService.Dal.Data;
@@ -9,6 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<TraceIdHandler>();
+builder.Services.AddHttpClient<HttpService>()
+    .AddHttpMessageHandler<TraceIdHandler>();
 
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(conn));
@@ -42,6 +47,7 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger(); 
 app.UseSwaggerUI();
 
+app.UseTraceId();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

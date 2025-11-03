@@ -1,3 +1,4 @@
+using CoreLib.Http;
 using Microsoft.EntityFrameworkCore;
 using DeliveryService.Infrastructure.Persistence;
 using DeliveryService.Core.Interfaces;
@@ -32,6 +33,7 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseTraceId();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

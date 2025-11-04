@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using OrderService.Logic.Services;
 using CoreLib.Dtos;
 using CoreLib.Entities;
+using CoreLib.Http;
 
 namespace OrderService.Api.Controllers
 {
@@ -10,7 +11,13 @@ namespace OrderService.Api.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService service;
-        public OrdersController(IOrderService service) => this.service = service;
+        private readonly HttpService http;
+
+        public OrdersController(IOrderService service, HttpService http)
+        {
+            this.service = service;
+            this.http = http;
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetByUser([FromQuery] int userId)
@@ -23,7 +30,8 @@ namespace OrderService.Api.Controllers
         public async Task<IActionResult> Get(int id)
         {
             var o = await service.GetAsync(id);
-            if (o == null) return NotFound();
+            if (o == null)
+                return NotFound();
             return Ok(o);
         }
 
@@ -46,6 +54,13 @@ namespace OrderService.Api.Controllers
         {
             await service.DeleteAsync(id);
             return NoContent();
+        }
+
+        [HttpGet("couriers")]
+        public async Task<IActionResult> GetCouriers()
+        {
+            var data = await http.GetAsync<object>("http://localhost:5001/api/couriers");
+            return Ok(new { traceId = TraceIdProvider.TraceId, data });
         }
     }
 }

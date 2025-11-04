@@ -1,4 +1,5 @@
 using CoreLib.Http;
+using CoreLib.Transport;
 using Microsoft.EntityFrameworkCore;
 using DeliveryService.Infrastructure.Persistence;
 using DeliveryService.Core.Interfaces;
@@ -12,6 +13,10 @@ builder.Services.AddSwaggerGen();
 
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DeliveryDbContext>(opt => opt.UseNpgsql(conn));
+builder.Services.AddHttpClient<ITransportService, HttpTransportService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["DeliveryService:BaseUrl"] ?? "http://localhost:5001/");
+});
 
 // repositories
 builder.Services.AddScoped<ICourierRepository, CourierRepository>();

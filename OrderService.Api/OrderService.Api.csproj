@@ -7,6 +7,8 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoreLib\CoreLib.csproj" />
+    <ProjectReference Include="..\DeliveryService.Application\DeliveryService.Application.csproj" />
+    <ProjectReference Include="..\DeliveryService.Infrastructure\DeliveryService.Infrastructure.csproj" />
     <ProjectReference Include="..\OrderService.Logic\OrderService.Logic.csproj" />
     <ProjectReference Include="..\OrderService.Dal\OrderService.Dal.csproj" />
   </ItemGroup>

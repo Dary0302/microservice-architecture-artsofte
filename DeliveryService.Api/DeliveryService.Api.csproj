@@ -9,8 +9,11 @@
     <ProjectReference Include="..\DeliveryService.Application\DeliveryService.Application.csproj" />
     <ProjectReference Include="..\DeliveryService.Infrastructure\DeliveryService.Infrastructure.csproj" />
     <ProjectReference Include="..\DeliveryService.Core\DeliveryService.Core.csproj" />
+    <ProjectReference Include="..\OrderService.Logic\OrderService.Logic.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.5.5" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
       <PrivateAssets>all</PrivateAssets>

@@ -4,6 +4,8 @@ using CoreLib.Dtos;
 using CoreLib.Entities;
 using CoreLib.Http;
 using CoreLib.Transport;
+using CoreLib.Transport.Contracts;
+using MassTransit;
 
 namespace OrderService.Api.Controllers;
 
@@ -14,12 +16,14 @@ public class OrdersController : ControllerBase
     private readonly IOrderService service;
     private readonly HttpService http;
     private readonly ITransportService transport;
+    private readonly IPublishEndpoint publishEndpoint;
 
-    public OrdersController(IOrderService service, HttpService http, ITransportService transport)
+    public OrdersController(IOrderService service, HttpService http, ITransportService transport, IPublishEndpoint publishEndpoint)
     {
         this.service = service;
         this.http = http;
         this.transport = transport;
+        this.publishEndpoint = publishEndpoint;
     }
 
     [HttpGet]
@@ -71,6 +75,16 @@ public class OrdersController : ControllerBase
     {
         var response = await transport.RequestAsync<AssignRequest, AssignResponse>("assign", req);
         return Ok(response);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> CreateOrder(string product)
+    {
+        var orderId = Guid.NewGuid();
+
+        await publishEndpoint.Publish(new OrderCreated(orderId, product));
+
+        return Ok(new { orderId, status = "Order created" });
     }
 }
     

@@ -1,6 +1,7 @@
 using CoreLib.Http;
 using Microsoft.EntityFrameworkCore;
 using CoreLib.Interfaces;
+using CoreLib.Transport;
 using OrderService.Dal.Data;
 using OrderService.Dal.Repositories;
 using OrderService.Logic.Services;
@@ -26,6 +27,34 @@ builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddScoped<IDishService, DishService>();
 builder.Services.AddScoped<IOrderService, OrderService.Logic.Services.OrderService>();
 
+var transport = builder.Configuration["Transport"] ?? "Http";
+
+builder.Services.AddSingleton<IRpcHandler, DeliveryService.Application.Consumers.AssignDeliveryConsumer>();
+
+if (transport == "RabbitMq")
+{
+    var rabbitConn = builder.Configuration["RabbitMq:Connection"] ?? "amqp://guest:guest@localhost:5672/";
+    var rpcQueue = builder.Configuration["RabbitMq:Queue"] ?? "rpc_queue";
+
+    builder.Services.AddSingleton<ITransportService>(_ =>
+        new DeliveryService.Infrastructure.Rabbit.RabbitMqTransportServiceAdapter(rabbitConn, rpcQueue));
+
+    builder.Services.AddSingleton(sp =>
+    {
+        var handler = sp.GetRequiredService<IRpcHandler>();
+        var server = new DeliveryService.Infrastructure.Rabbit.RabbitMqRpcServer(rabbitConn, rpcQueue, handler);
+        server.Start();
+        return server;
+    });
+}
+else
+{
+    builder.Services.AddHttpClient<ITransportService, HttpTransportService>(client =>
+    {
+        client.BaseAddress = new Uri(builder.Configuration["DeliveryService:BaseUrl"] ?? "http://localhost:5001/");
+    });
+}
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -44,7 +73,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-app.UseSwagger(); 
+app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseTraceId();

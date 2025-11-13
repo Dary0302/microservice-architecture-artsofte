@@ -8,4 +8,7 @@
     <ProjectReference Include="..\CoreLib\CoreLib.csproj" />
     <ProjectReference Include="..\OrderService.Dal\OrderService.Dal.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.5.5" />
+  </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@ using CoreLib.Http;
 using Microsoft.EntityFrameworkCore;
 using CoreLib.Interfaces;
 using CoreLib.Transport;
+using MassTransit;
 using OrderService.Dal.Data;
 using OrderService.Dal.Repositories;
 using OrderService.Logic.Services;
@@ -54,6 +55,42 @@ else
         client.BaseAddress = new Uri(builder.Configuration["DeliveryService:BaseUrl"] ?? "http://localhost:5001/");
     });
 }
+
+builder.Services.AddMassTransit(x =>
+{
+    x.SetKebabCaseEndpointNameFormatter();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+        cfg.ConfigureEndpoints(context);
+    });
+    
+    x.AddConsumer<OrderCreatedConsumer>();
+});
+
+builder.Services.AddMassTransit(x =>
+{
+    x.AddSagaStateMachine<OrderStateMachine, OrderState>()
+        .InMemoryRepository();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
+builder.Services.AddMassTransitHostedService();
 
 var app = builder.Build();
 
